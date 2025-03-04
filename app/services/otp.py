@@ -1,28 +1,28 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.exceptions import BadRequest
-from app.models.tenant import Tenant
+from app.models.user import User
 
 
-async def generate_tenant_verification_otp(db: AsyncSession, tenant: Tenant) -> str:
+async def generate_user_verification_otp(db: AsyncSession, user: User) -> str:
     """
-    Generate & Save Tenant Verification OTP.
+    Generate & Save User Verification OTP.
     """
-    tenant.generate_otp()
+    user.generate_otp()
 
-    db.add(tenant)
+    db.add(user)
     await db.commit()
-    await db.refresh(tenant)
+    await db.refresh(user)
 
-    return tenant.otp
+    return user.otp
 
 
-async def validate_tenant_verification_otp(tenant: Tenant, otp: str) -> str:
+async def validate_tenant_verification_otp(user: User, otp: str) -> str:
     """
-    Validate Tenant Verification OTP.
+    Validate User Verification OTP.
     """
     # Check if the OTP is invalid or expired
-    if tenant.otp != otp or tenant.is_otp_expired():
+    if user.otp != otp or user.is_otp_expired():
         raise BadRequest("Invalid OTP")
 
     return "Valid OTP"

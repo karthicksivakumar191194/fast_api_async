@@ -111,6 +111,11 @@ Python code formatter
     pip install black
 ```
 
+Working with Google Sheets and Google Sheets API to read from, write to, and format Google Sheets.
+```bash
+    pip install gspread gspread-formatting oauth2client
+```
+
 Install pre-commit
 ```bash
     pip install pre-commit

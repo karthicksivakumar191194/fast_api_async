@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     environment: str = "local"  # local, development, qa, production
     secret_key: str
     allowed_hosts: List[str] = []
+    google_sheet_credentials: str
+    onboarded_tenant_list_gsheet_url: str
 
     # PostgreSQL Database
     database_url: str

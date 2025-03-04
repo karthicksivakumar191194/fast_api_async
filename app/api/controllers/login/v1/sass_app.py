@@ -1,4 +1,3 @@
-from uuid import UUID
 from fastapi import APIRouter, status
 
 
@@ -19,27 +18,14 @@ async def login_with_email_or_mobile(request):
 
     # Sample Response
     return {
-        "data": [{"tenant_id": "", "company_name": "", "company_logo": ""}],
+        "data": [
+            {"tenant_id": "", "company_name": "", "company_logo": "", "user_id": "", "user_name": "", "user_image": ""}
+        ],
         "message": "Success"
     }
 
 
-# Step 2: User selects an tenant(account)
-@router.get("/tenant/{tenant_id}", status_code=status.HTTP_200_OK)
-async def select_tenant(tenant_id: UUID):
-    """
-    Endpoint to retrieve user details of the selected tenant(account).
-    """
-    # TODO Functionality
-
-    # Sample Response
-    return {
-        "data": {"tenant_id": "", "user_id": "", "user_name": "", "user_image": ""},
-        "message": "Success"
-    }
-
-
-# Step 3-A: User enters password
+# Step 2-A: User enters password
 @router.post("/password", status_code=status.HTTP_200_OK)
 async def login_with_password(request):
     """
@@ -56,7 +42,7 @@ async def login_with_password(request):
     }
 
 
-# Step 3-B-1: User requests OTP for login
+# Step 2-B-1: User requests OTP for login
 @router.post("/otp", status_code=status.HTTP_200_OK)
 async def request_otp(request):
     """
@@ -71,7 +57,7 @@ async def request_otp(request):
     }
 
 
-# Step 3-B-2: Verify OTP
+# Step 2-B-2: Verify OTP
 @router.post("/otp/verify", status_code=status.HTTP_200_OK)
 async def verify_otp(request):
     """
@@ -86,7 +72,7 @@ async def verify_otp(request):
         "message": "OTP verified, login successful"
     }
 
-# Step 3-B-2: Resend OTP
+# Step 2-B-2: Resend OTP
 @router.post("/otp/resend", status_code=status.HTTP_200_OK)
 async def resend_otp(request):
     """

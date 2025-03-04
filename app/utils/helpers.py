@@ -1,6 +1,5 @@
 import random
 import string
-from urllib.parse import urlparse
 from passlib.context import CryptContext
 
 # Create a password context using bcrypt hashing algorithm
