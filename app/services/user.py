@@ -1,9 +1,27 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.sql import exists
+from passlib.context import CryptContext
 
 from app.models import Tenant, User, UserStatusEnum
-from app.utils.helpers import hash_password
+
+
+# Create a password context using bcrypt hashing algorithm
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def hash_password(password: str) -> str:
+    """
+    Hashes the given password using a secure hashing algorithm.
+    """
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Verifies if the plain password matches the hashed password.
+    """
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 async def create_owner_user(db: AsyncSession, tenant: Tenant, name: str, email: str, password: str) -> User:

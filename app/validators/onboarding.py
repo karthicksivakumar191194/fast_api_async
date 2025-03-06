@@ -6,7 +6,7 @@ from app.models import User
 from app.exceptions import ValidationError
 
 
-async def validate_owner_email(db: AsyncSession, email: str, errors: Dict):
+async def _validate_owner_email(db: AsyncSession, email: str, errors: Dict):
     result = await db.execute(select(User).filter(User.email == email, User.is_account_owner))
     user = result.scalars().first()
 
@@ -20,7 +20,7 @@ async def validate_onboard_request(db: AsyncSession, request):
     errors = {}
 
     # Validate owner email
-    await validate_owner_email(db, request.owner_email, errors)
+    await _validate_owner_email(db, request.owner_email, errors)
 
     # If there are errors, raise a ValidationError with all errors
     if errors:

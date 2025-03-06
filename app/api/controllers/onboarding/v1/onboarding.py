@@ -4,23 +4,24 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Form, APIRouter, BackgroundTasks, Depends, status
 
 from app.db.database import get_db
+from app.schemas.base_schema import Response
 from app.services.tenant import create_tenant
 from app.services.user import create_owner_user
-from app.services.otp import generate_user_verification_otp
+from app.services.otp import generate_user_otp
 from app.services.email import send_account_verification_otp
 from app.services.gsheet import add_tenant_details_to_admin_gsheet, update_tenant_details_to_admin_gsheet
-from app.schemas.onboarding import OnboardRequest, OnboardResponse
+from app.schemas.onboarding import OnboardRequest
 from app.validators.onboarding import validate_onboard_request
 
 
 router = APIRouter()
 
-@router.post("/", response_model=OnboardResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=Response, status_code=status.HTTP_201_CREATED)
 async def onboard_tenant(
     request:  Annotated[OnboardRequest, Form()],
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db)
-) -> OnboardResponse:
+):
     """
     Endpoint to onboard a new tenant, along with creating an owner account.
     Tenant will be in status "Not Verified" once onboarded.
@@ -39,8 +40,8 @@ async def onboard_tenant(
     # Create Owner User
     user = await create_owner_user(db, tenant, request.owner_name, request.owner_email, request.owner_password)
 
-    # Generate User Verification OTP
-    otp = await generate_user_verification_otp(db, user)
+    # Generate User OTP
+    otp = await generate_user_otp(db, user)
 
     # Send Account Verification OTP to Owner Email & Sync Tenant Details to Google Sheets
     # await asyncio.gather(
@@ -48,12 +49,14 @@ async def onboard_tenant(
     #     add_tenant_details_to_admin_gsheet(tenant, request.owner_name, request.owner_email)
     # )
 
+    # TODO: Need to implemenet Notification Engine for sending OTP to email
     background_tasks.add_task(send_account_verification_otp, otp, request.owner_email)
+
     background_tasks.add_task(add_tenant_details_to_admin_gsheet, tenant, request.owner_name, request.owner_email)
 
-    return OnboardResponse(
-        message="Account has been created successfully. Use the OTP from the email to proceed."
-    )
+    return {
+        "message": "Account has been created successfully. Use the OTP from the email to proceed."
+    }
 
 
 @router.post("/otp/verify", status_code=status.HTTP_200_OK)

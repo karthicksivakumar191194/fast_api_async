@@ -13,7 +13,7 @@ async def login(request):
     """
     tenant_id = ""
 
-    # TODO Functionality & Implement language support
+    # TODO Functionality
 
     # Sample Response
     return {
@@ -32,7 +32,7 @@ async def request_otp(request):
     """
     tenant_id = ""
 
-    # TODO Functionality & Implement language support
+    # TODO Functionality
 
     return {
         "message": "OTP sent successfully"
@@ -49,7 +49,7 @@ async def verify_otp(request):
     """
     tenant_id = ""
 
-    # TODO Functionality & Implement language support
+    # TODO Functionality
 
     return {
         "data": {"tenant_id": "", "user_id": "", "user_name": "", "user_image": "", "default_workspace_id": ""},
@@ -66,7 +66,7 @@ async def resend_otp(request):
     """
     tenant_id = ""
 
-    # TODO Functionality & Implement language support
+    # TODO Functionality
 
     return {
         "message": "OTP resent successfully"

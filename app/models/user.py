@@ -15,7 +15,7 @@ class UserStatusEnum(PyEnum):
     DELETED = ("deleted", "Deleted")
     ACTIVE = ("active", "Active")
     INACTIVE = ("inactive", "Inactive")
-    NOT_VERIFIED = ("not_verified", "Not Verified")
+    NOT_VERIFIED = ("not_verified", "Not Verified") # Invite Sent
 
     def __init__(self, value, label):
         self._value_ = value
@@ -24,6 +24,10 @@ class UserStatusEnum(PyEnum):
     @classmethod
     def list(cls):
         return list(cls)
+
+class UserIdentifierType(PyEnum):
+    email = "email"
+    mobile_no = "mobile_no"
 
 class User(Base):
     __tablename__ = 'users'
@@ -50,6 +54,7 @@ class User(Base):
     teams = relationship("Team", secondary=user_team_association, back_populates="users")
     workspaces = relationship("Workspace", secondary=user_workspace_association, back_populates="users")
     locations = relationship("Location", secondary=user_location_association, back_populates="users")
+    tenant = relationship("Tenant", back_populates="users", lazy="joined")
 
     def generate_otp(self):
         """

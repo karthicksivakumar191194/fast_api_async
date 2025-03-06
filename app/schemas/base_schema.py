@@ -27,21 +27,23 @@ class ListResponse(BaseModel):
     pagination: Pagination
 
 
+class Response(BaseModel):
+    message: str
+
+
 class DetailResponse(BaseModel):
     data: dict
 
 
-class CreateResponse(BaseModel):
-    message: str
+class CreateResponse(Response):
+    pass
 
 
-class UpdateResponse(BaseModel):
-    message: str
+class UpdateResponse(Response):
     updated_id: Optional[str] = None
 
 
-class DeleteResponse(BaseModel):
-    message: str
+class DeleteResponse(Response):
     deleted_id: Optional[str] = None
 
 
